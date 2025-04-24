@@ -68,7 +68,7 @@ A lightweight browser extension that **automatically marks VU LMS video lectures
 
 Made with ❤️ by **LostKnight**
 
-- 📧 Email: [jattcute41@gmail.com](mailto:jattcute41@gmail.com)  
+- 📧 Email: [LostKnight786@gmail.com](mailto:lostknight786@gmail.com)  
 - 💬 WhatsApp: [wa.me/923058599233](https://wa.me/923058599233)
 
 ---
