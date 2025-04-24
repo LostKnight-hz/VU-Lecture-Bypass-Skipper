@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "VU LMS Lecture Skipper",
+  "version": "1.6",
+  "description": "Automatically marks VULMS video lectures as watched, with manual override.",
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "*://*.vulms.vu.edu.pk/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icons/logo.png"
+  },
+  "icons": {
+    "16": "icons/logo.png",
+    "48": "icons/logo.png",
+    "128": "icons/logo.png",
+    "512": "icons/logo.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.vulms.vu.edu.pk/*LessonViewer.aspx*"
+      ],
+      "js": [
+        "content_script.js",
+        "auto_tab_switcher.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}

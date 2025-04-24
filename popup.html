@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture Skipper</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>VU Lecture Skipper</h1>
+    </header>
+
+    <div class="card main-card">
+      <button class="action-button" id="mark-watched-button">Mark Lecture as Watched (Manual)</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card toggle-card">
+      <div class="toggle-label">Automatic Skipping:</div>
+      <label class="toggle">
+        <input type="checkbox" id="auto-skip-toggle" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <footer>
+      <span class="version" id="version-string">v1.6</span>
+      <span class="credit" id="credit-link">Made by LostKnight</span>
+    </footer>
+  </div>
+
+  <!-- Contact Modal -->
+  <div id="contact-modal" class="modal">
+    <div class="modal-content">
+      <p><strong>Contact, ask for a feature or report an issue:</strong></p>
+      <p>Email: <a href="#" id="email-link">jattcute41@gmail.com</a></p>
+      <p>WhatsApp: <a href="https://wa.me/923058599233" target="_blank">wa.me/923058599233</a></p>
+      <button id="close-modal" class="close-button">Close</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
