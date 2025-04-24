@@ -54,9 +54,9 @@ A lightweight browser extension that **automatically marks VU LMS video lectures
 
 ## 📸 Screenshots
 
-| Auto Skipping Demo | Popup UI |
-|--------------------|----------|
-| *(Add a GIF here)* | *(Add screenshot of popup.html)* |
+| Auto Skipping Demo | Popup UI - Main | Popup UI - Contact |
+|--------------------|------------------|---------------------|
+| ![Auto Skipping](Screenshots/Live_Demo.gif) | ![Main Popup](Screenshots/Screen01.png) | ![Contact Modal](Screenshots/Screen02.png) |
 
 ---
 
