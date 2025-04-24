@@ -1,6 +1,10 @@
 # 📚 VU LMS Lecture Skipper  
 **“Auto-skip VU LMS lectures. Study smart, not longer.”**
 
+![Version](https://img.shields.io/badge/version-1.6-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Built For](https://img.shields.io/badge/VU-LMS-blueviolet)
+
 A lightweight browser extension that **automatically marks VU LMS video lectures as watched** and skips to the next one — no timers, no waiting.
 
 🎓 Built for working students, part-time learners, and anyone who values their time.
