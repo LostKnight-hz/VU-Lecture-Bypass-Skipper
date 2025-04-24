@@ -72,4 +72,5 @@ Made with ❤️ by **LostKnight**
 ## 📄 License
 
 This project is licensed under the **MIT License**.  
-See [`License`(./License) for full details.
+See [LICENSE](./LICENSE) for full details.
+
