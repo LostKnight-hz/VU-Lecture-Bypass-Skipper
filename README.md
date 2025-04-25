@@ -41,13 +41,13 @@ A lightweight browser extension that **automatically marks VU LMS video lectures
 
 ## 🔧 Installation
 
-### 🔹 Option 1: Load as Unpacked Extension (Recommended)
+### 🔹 Load as Unpacked Extension (Recommended)
 
 1. Download and unzip this repository or clone it:
    ```bash
    git clone https://github.com/LostKnight-hz/VU-Lecture-Bypass-Skipper.git
    ```
-2. Open `chrome://extensions` in Chrome  
+2. Copy and open this URL in a new tab: `chrome://extensions`
 3. Enable **Developer Mode** (top-right corner)  
 4. Click **Load Unpacked**  
 5. Select the folder containing the extension files  
