@@ -1,4 +1,4 @@
-# 📚 VU LMS Lecture Skipper  
+# 📚 VU LMS Lecture Bypass (Skipper)  
 **“Auto-skip VU LMS lectures. Study smart, not longer.”**
 
 ![Version](https://img.shields.io/badge/version-1.6-blue)
