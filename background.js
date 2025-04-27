@@ -1,3 +1,5 @@
+// background.js
+
 // Set default value for auto-skip on installation
 chrome.runtime.onInstalled.addListener(details => {
   if (details.reason === "install") {
@@ -5,7 +7,26 @@ chrome.runtime.onInstalled.addListener(details => {
       console.log("VULMS Skipper BG: Default auto-skip setting (enabled) saved.");
     });
   }
+
+  // --- REMOVE THIS ---
+  // Fetch attendance subjects on installation
+  // fetchAttendanceSubjects(); // <- REMOVE or COMMENT OUT
+  // -----------------
+
 });
+
+// Fetch attendance subjects on startup
+chrome.runtime.onStartup.addListener(() => {
+  // --- REMOVE THIS ---
+  // fetchAttendanceSubjects(); // <- REMOVE or COMMENT OUT
+  // -----------------
+});
+
+// --- REMOVE THIS ---
+// Import the fetchAttendanceSubjects function
+// importScripts("fetch_attendance_subjects.js"); // <- REMOVE or COMMENT OUT
+// -----------------
+
 
 // --- This is the core logic function that will be injected into the page ---
 function performAutoSkipLogic_Injectable() {
@@ -111,7 +132,7 @@ function performAutoSkipLogic_Injectable() {
                 } else {
                   console.warn("VULMS Skipper: Next button not found.");
                 }
-              }, 1000);
+              }, 1000); // Add a small delay before clicking next
 
               innerResolve({ status: 'success', message: 'Marked and moved to next' });
             } catch (updateError) {
@@ -122,7 +143,8 @@ function performAutoSkipLogic_Injectable() {
           (error) => {
             console.error("VULMS Skipper Injected: PageMethods.SaveStudentVideoLog failed:", error);
             const errorMessage = error && error.get_message ? error.get_message() : 'Unknown PageMethods error';
-            innerReject(`API Error: ${errorMessage}`);
+            // Resolve instead of rejecting to send error details back to background
+            innerResolve({ status: 'api_error', message: `API Error: ${errorMessage}` });
           }
         );
       });
@@ -130,10 +152,12 @@ function performAutoSkipLogic_Injectable() {
       resolve(pageMethodsResult);
     } catch (error) {
       console.error("VULMS Skipper Injected: Error within auto-skip function:", error);
-      reject(`Execution Error: ${error.message}`);
+      // Resolve instead of rejecting to send error details back to background
+       resolve({ status: 'execution_error', message: `Execution Error: ${error.message}` }); // Send specific error status
     }
   }); // ✅ Closing new Promise
 }
+
 
 // --- Message Listener in Background Script ---
 let isAttemptingSkip = {}; // Use an object to track attempts per tabId
@@ -144,49 +168,72 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (!tabId) {
       console.error("VULMS Skipper BG: Received message without sender tab ID.");
       sendResponse({ status: "error", message: "No sender tab ID." });
-      return true;
+      return true; // Indicate async response
     }
 
+    // Prevent concurrent skips on the same tab
     if (isAttemptingSkip[tabId]) {
       console.log(`VULMS Skipper BG: Skip attempt already in progress for tab ${tabId}. Ignoring request.`);
       sendResponse({ status: "ignored", message: "Already processing." });
-      return true;
+      return true; // Indicate async response
     }
 
     console.log(`VULMS Skipper BG: Received requestAutoSkip from tab ${tabId}.`);
-    isAttemptingSkip[tabId] = true;
+    isAttemptingSkip[tabId] = true; // Mark as attempting
 
     (async () => {
+      let responseSent = false; // Flag to ensure sendResponse is called only once
       try {
         const injectionResults = await chrome.scripting.executeScript({
-          target: { tabId: tabId, allFrames: false },
+          target: { tabId: tabId, allFrames: false }, // Target specific tab
           func: performAutoSkipLogic_Injectable,
-          world: "MAIN"
+          world: "MAIN" // Execute in the page's context
         });
 
-        if (injectionResults && injectionResults[0]) {
+        // Process results
+        if (injectionResults && injectionResults[0] && injectionResults[0].result) {
           const result = injectionResults[0].result;
           console.log(`VULMS Skipper BG: Injection result for tab ${tabId}:`, result);
 
-          if (result && (result.status === 'retry' || result.status === 'error')) {
-            console.warn(`VULMS Skipper BG: Auto-skip attempt for tab ${tabId} needs retry or failed in page: ${result.message}`);
-          }
+           // Handle different statuses from the injected script
+           if (result.status === 'retry' || result.status === 'skipped' || result.status === 'api_error' || result.status === 'execution_error') {
+             console.warn(`VULMS Skipper BG: Auto-skip for tab ${tabId} reported status: ${result.status} - ${result.message}`);
+           } else if (result.status === 'success' || result.status === 'success_update_failed') {
+             console.log(`VULMS Skipper BG: Auto-skip successful (or partially) for tab ${tabId}.`);
+           }
 
           sendResponse({ status: "executed", result: result });
+          responseSent = true;
         } else {
-          console.warn(`VULMS Skipper BG: executeScript for tab ${tabId} returned no results.`);
-          sendResponse({ status: "error", message: "executeScript returned no result." });
+           // Handle cases where executeScript might not return expected results
+           const err_msg = `executeScript for tab ${tabId} returned unexpected data or no result.`;
+           console.warn(`VULMS Skipper BG: ${err_msg}`, injectionResults);
+           if (!responseSent) sendResponse({ status: "error", message: err_msg });
+           responseSent = true;
         }
       } catch (error) {
+        // Catch errors during the executeScript call itself
         console.error(`VULMS Skipper BG: Error executing script in tab ${tabId}:`, error);
-        sendResponse({ status: "error", message: `Script execution failed: ${error.message}` });
+        if (!responseSent) sendResponse({ status: "error", message: `Script execution failed: ${error.message}` });
+        responseSent = true;
       } finally {
+        // Ensure the lock is released, even if errors occurred
+        // Use a small delay to prevent race conditions if the page reloads quickly
         setTimeout(() => {
-          delete isAttemptingSkip[tabId];
-        }, 500);
+            delete isAttemptingSkip[tabId];
+            console.log(`VULMS Skipper BG: Released skip lock for tab ${tabId}.`);
+        }, 500); // 500ms delay
+
+        // Ensure sendResponse is called if it hasn't been already (e.g., unexpected error paths)
+        if (!responseSent) {
+            console.warn(`VULMS Skipper BG: sendResponse may not have been called for tab ${tabId}, sending generic error.`);
+            sendResponse({ status: "error", message: "An unknown error occurred during execution." });
+        }
       }
     })();
 
-    return true;
+    return true; // Crucial: Indicates you will send a response asynchronously.
   }
+  // Add other message listeners here if needed
+  // return false; // Optional: Only return true for messages you handle asynchronously
 });
