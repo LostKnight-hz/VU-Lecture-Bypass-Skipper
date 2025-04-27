@@ -1,4 +1,5 @@
 // content_script.js
+
 console.log("VULMS Skipper CS: Content script loaded.");
 
 let initialCheckInterval = null;
@@ -71,7 +72,7 @@ function performInitialCheck() {
         setupTabChangeObserver();
 
     } else if (initialAttemptCounter >= MAX_INITIAL_ATTEMPTS) {
-        console.warn("VULMS Skipper CS: Max initial attempts reached. Key element #hfActiveTab not found. Auto-skip might not work correctly.");
+        //console.warn("VULMS Skipper CS: Max initial attempts reached. Key element #hfActiveTab not found. Auto-skip might not work correctly.");
         clearInterval(initialCheckInterval);
     }
 }
