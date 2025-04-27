@@ -3,21 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lecture Skipper</title>
+  <title>VU Lecture Bypass</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>VU Lecture Skipper</h1>
+      <h1>VU Lecture Bypass</h1>
     </header>
 
+    <!-- Student Info Card -->
+    <div class="card main-card" id="student-info" style="text-align: center; padding: 10px;">
+      <!-- Student info will appear here -->
+    </div>
+
+    <!-- Attendance Summary Card -->
+    <div id="attendance-summary" class="card main-card clickable" style="padding: 12px; margin-top: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        📚 Subjects with Timed Lectures: <span id="attendance-count">Loading...</span>
+      </div>
+      <span id="refresh-attendance" style="cursor: pointer; font-size: 18px;">🔄</span>
+    </div>
+
+    <!-- Attendance Subjects Modal -->
+    <div id="attendance-modal" class="modal">
+      <div class="modal-content">
+        <span id="close-attendance-modal" class="close">&times;</span>
+        <h2>Subjects with Attendance</h2>
+        <ul id="attendance-list" style="list-style: none; padding: 0; text-align: left; margin-top: 10px;"></ul>
+      </div>
+    </div>
+
+    <!-- Refresh Instruction Modal -->
+    <div id="refresh-modal" class="modal">
+      <div class="modal-content">
+        <h2>Refresh Attendance Subjects</h2>
+        <p id="refresh-instruction-text">Please manually visit your Progress Page to refresh attendance subjects.</p>
+        <button id="close-refresh-modal" class="close-button">Close</button>
+      </div>
+    </div>
+
+    <!-- Manual Watch Button -->
     <div class="card main-card">
       <button class="action-button" id="mark-watched-button">Mark Lecture as Watched (Manual)</button>
     </div>
 
+    <!-- Divider -->
     <div class="divider"></div>
 
+    <!-- Automatic Skipping Toggle -->
     <div class="card toggle-card">
       <div class="toggle-label">Automatic Skipping:</div>
       <label class="toggle">
@@ -26,6 +60,7 @@
       </label>
     </div>
 
+    <!-- Footer -->
     <footer>
       <span class="version" id="version-string">v1.6</span>
       <span class="credit" id="credit-link">Made by LostKnight</span>
@@ -37,7 +72,7 @@
     <div class="modal-content">
       <p><strong>Contact, ask for a feature or report an issue:</strong></p>
       <p>Email: <a href="#" id="email-link">lostknight786@gmail.com</a></p>
-      <p>WhatsApp: <a href="https://wa.me/923058599233" target="_blank">wa.me/923058599233</a></p>
+      <p>WhatsApp: <a href="https://wa.me/923058599233" target="_blank">(+92)3058599233</a></p>
       <button id="close-modal" class="close-button">Close</button>
     </div>
   </div>
